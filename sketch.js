@@ -25,8 +25,14 @@ let player;
 let ghosts = [];
 let dots = [];
 
+let gameScale = 1;
+let offsetX = 0;
+let offsetY = 0;
+
 function setup() {
-    createCanvas(COLS * TILE_SIZE, ROWS * TILE_SIZE);
+    createCanvas(windowWidth, windowHeight);
+    updateLayout();
+    
     player = new Entity(5, 9, color(255, 255, 0));
 
     // GhostRegistryに登録された全員のAIを読み込んでゴーストを生成
@@ -40,6 +46,19 @@ function setup() {
     }
 
     initLevel();
+}
+
+function updateLayout() {
+    let gameW = COLS * TILE_SIZE;
+    let gameH = ROWS * TILE_SIZE;
+    gameScale = min(windowWidth / gameW, windowHeight / gameH);
+    offsetX = (windowWidth - gameW * gameScale) / 2;
+    offsetY = (windowHeight - gameH * gameScale) / 2;
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    updateLayout();
 }
 
 function initLevel() {
@@ -63,6 +82,11 @@ function initLevel() {
 
 function draw() {
     background(0);
+    
+    push();
+    translate(offsetX, offsetY);
+    scale(gameScale);
+
     drawMap();
 
     fill(255, 180, 180);
@@ -85,7 +109,7 @@ function draw() {
             fill(255, 0, 0);
             textSize(32);
             textAlign(CENTER, CENTER);
-            text("GAME OVER", width / 2, height / 2);
+            text("GAME OVER", (COLS * TILE_SIZE) / 2, (ROWS * TILE_SIZE) / 2);
             noLoop();
         }
     }
@@ -94,9 +118,11 @@ function draw() {
         fill(0, 255, 0);
         textSize(32);
         textAlign(CENTER, CENTER);
-        text("GAME CLEAR!", width / 2, height / 2);
+        text("GAME CLEAR!", (COLS * TILE_SIZE) / 2, (ROWS * TILE_SIZE) / 2);
         noLoop();
     }
+    
+    pop();
 }
 
 function drawMap() {
@@ -111,8 +137,14 @@ function drawMap() {
     }
 }
 
-function mousePressed() { setTarget(mouseX, mouseY); }
-function touchStarted() { setTarget(mouseX, mouseY); return false; }
+function mousePressed() { handleInput(mouseX, mouseY); }
+function touchStarted() { handleInput(mouseX, mouseY); return false; }
+
+function handleInput(mx, my) {
+    let scaledX = (mx - offsetX) / gameScale;
+    let scaledY = (my - offsetY) / gameScale;
+    setTarget(scaledX, scaledY);
+}
 
 function setTarget(tx, ty) {
     let targetX = floor(tx / TILE_SIZE);
@@ -204,8 +236,8 @@ class Entity {
         if (this.dir === 'LEFT') this.px -= this.speed;
         if (this.dir === 'RIGHT') this.px += this.speed;
 
-        if (this.px < 0) this.px += width;
-        if (this.px >= width) this.px -= width;
+        if (this.px < 0) this.px += (COLS * TILE_SIZE);
+        if (this.px >= (COLS * TILE_SIZE)) this.px -= (COLS * TILE_SIZE);
     }
 
     draw() {
