@@ -45,11 +45,15 @@ function setup() {
     // GhostRegistryに登録された全員のAIを読み込んでゴーストを生成
     for (let studentName in GhostRegistry) {
         let config = GhostRegistry[studentName];
-        ghosts.push(new Ghost(
-            studentName,
-            config.logic,
-            color(config.color || 'red')
-        ));
+        let count = config.count || 1;
+        for (let i = 0; i < count; i++) {
+            let displayName = count > 1 ? `${studentName} ${i + 1}` : studentName;
+            ghosts.push(new Ghost(
+                displayName,
+                config.logic,
+                color(config.color || 'red')
+            ));
+        }
     }
 
     initLevel();
