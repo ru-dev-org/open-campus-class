@@ -100,6 +100,7 @@ function draw() {
     }
 
     player.update(null);
+    player.drawPath();
     player.draw();
 
     for (let g of ghosts) {
@@ -151,8 +152,29 @@ function setTarget(tx, ty) {
     let targetY = floor(ty / TILE_SIZE);
     if (targetX < 0 || targetX >= COLS || targetY < 0 || targetY >= ROWS) return;
     if (mapData[targetY][targetX] === 1) return;
-    let newPath = findShortestPath(player.gx, player.gy, targetX, targetY);
-    if (newPath.length > 0) player.pathQueue = newPath;
+
+    // 現在の開始地点（ノード）を決定
+    let startX = player.gx;
+    let startY = player.gy;
+
+    // すでに移動中の場合は、その移動先のノードを開始点とする
+    if (player.dir !== '') {
+        if (player.dir === 'UP') startY--;
+        if (player.dir === 'DOWN') startY++;
+        if (player.dir === 'LEFT') startX = (startX - 1 + COLS) % COLS;
+        if (player.dir === 'RIGHT') startX = (startX + 1) % COLS;
+    }
+
+    // 足元をクリックした場合は停止
+    if (startX === targetX && startY === targetY) {
+        player.pathQueue = [];
+        return;
+    }
+
+    let newPath = findShortestPath(startX, startY, targetX, targetY);
+    if (newPath.length > 0) {
+        player.pathQueue = newPath;
+    }
 }
 
 function findShortestPath(startX, startY, targetX, targetY) {
@@ -238,6 +260,60 @@ class Entity {
 
         if (this.px < 0) this.px += (COLS * TILE_SIZE);
         if (this.px >= (COLS * TILE_SIZE)) this.px -= (COLS * TILE_SIZE);
+    }
+
+    drawPath() {
+        if (this.pathQueue.length === 0 && this.dir === '') return;
+
+        push();
+        stroke(255, 255, 255, 120); // 半透明の白
+        strokeWeight(2);
+        noFill();
+        drawingContext.setLineDash([5, 5]);
+
+        // 現在のピクセル位置からスタート
+        let lastPx = this.px;
+        let lastPy = this.py;
+        
+        let curGx = this.gx;
+        let curGy = this.gy;
+
+        // 1. 移動中の場合は、まず次のノードまで線を引く
+        if (this.dir !== '') {
+            if (this.dir === 'UP') curGy--;
+            if (this.dir === 'DOWN') curGy++;
+            if (this.dir === 'LEFT') curGx = (curGx - 1 + COLS) % COLS;
+            if (this.dir === 'RIGHT') curGx = (curGx + 1) % COLS;
+
+            let nextPx = curGx * TILE_SIZE + TILE_SIZE / 2;
+            let nextPy = curGy * TILE_SIZE + TILE_SIZE / 2;
+
+            if (Math.abs(nextPx - lastPx) < (COLS * TILE_SIZE) / 2) {
+                line(lastPx, lastPy, nextPx, nextPy);
+            }
+            lastPx = nextPx;
+            lastPy = nextPy;
+        }
+
+        // 2. 残りの予定パスを辿る
+        for (let dir of this.pathQueue) {
+            if (dir === 'UP') curGy--;
+            if (dir === 'DOWN') curGy++;
+            if (dir === 'LEFT') curGx = (curGx - 1 + COLS) % COLS;
+            if (dir === 'RIGHT') curGx = (curGx + 1) % COLS;
+
+            let nextPx = curGx * TILE_SIZE + TILE_SIZE / 2;
+            let nextPy = curGy * TILE_SIZE + TILE_SIZE / 2;
+
+            if (Math.abs(nextPx - lastPx) < (COLS * TILE_SIZE) / 2) {
+                line(lastPx, lastPy, nextPx, nextPy);
+            }
+            lastPx = nextPx;
+            lastPy = nextPy;
+        }
+
+        drawingContext.setLineDash([]);
+        pop();
     }
 
     draw() {
