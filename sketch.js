@@ -192,7 +192,7 @@ class Entity {
         this.px = gx * TILE_SIZE + TILE_SIZE / 2;
         this.py = gy * TILE_SIZE + TILE_SIZE / 2;
         this.col = col;
-        this.speed = 2;
+        this.speed = 1;
         this.dir = '';
         this.pathQueue = [];
     }
