@@ -89,12 +89,28 @@ function initLevel() {
     player.pathQueue = [];
     player.dir = '';
 
-    // 敵の初期位置も中央付近に調整
+    // 敵の出現場所をプレイヤーから10マス以上離れた場所からランダムに選ぶ
+    let possibleSpawns = [];
+    for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+            if (mapData[r][c] === 0) {
+                let d = dist(c, r, player.gx, player.gy);
+                if (d >= 10) {
+                    possibleSpawns.push({ x: c, y: r });
+                }
+            }
+        }
+    }
+
     for (let g of ghosts) {
-        g.px = 8 * TILE_SIZE + TILE_SIZE / 2;
-        g.py = 3 * TILE_SIZE + TILE_SIZE / 2;
-        g.gx = 8;
-        g.gy = 6;
+        let spawn = possibleSpawns.length > 0
+            ? possibleSpawns[Math.floor(Math.random() * possibleSpawns.length)]
+            : { x: 8, y: 3 }; // 万が一候補がない場合のフォールバック
+
+        g.gx = spawn.x;
+        g.gy = spawn.y;
+        g.px = g.gx * TILE_SIZE + TILE_SIZE / 2;
+        g.py = g.gy * TILE_SIZE + TILE_SIZE / 2;
         g.dir = '';
     }
 }

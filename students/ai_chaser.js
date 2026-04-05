@@ -1,6 +1,6 @@
 GhostRegistry["チェイサー"] = {
     color: "red",
-    count: 3, // このアルゴリズムで動く敵の数
+    count: 1, // このアルゴリズムで動く敵の数
     // 移動方向を決める関数
     logic: function (myX, myY, playerX, playerY, dirs) {
         // myX, myY は自分のマップ上のマスの位置変数
