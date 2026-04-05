@@ -2,20 +2,27 @@ const TILE_SIZE = 30;
 
 // 1: 壁, 0: 通路
 const mapData = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1],
-    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1],
-    [1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1],
-    [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1],
+    [1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+    [1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ];
 
 const ROWS = mapData.length;
@@ -32,7 +39,7 @@ let offsetY = 0;
 function setup() {
     createCanvas(windowWidth, windowHeight);
     updateLayout();
-    
+
     player = new Entity(5, 9, color(255, 255, 0));
 
     // GhostRegistryに登録された全員のAIを読み込んでゴーストを生成
@@ -63,26 +70,34 @@ function windowResized() {
 
 function initLevel() {
     dots = [];
+    // 新しい四隅の位置 (1,1) (15,1) (1,19) (15,19) あたり
+    dots.push({ px: 8 * TILE_SIZE + TILE_SIZE / 2, py: 10 * TILE_SIZE + TILE_SIZE / 2 });
     dots.push({ px: 1 * TILE_SIZE + TILE_SIZE / 2, py: 1 * TILE_SIZE + TILE_SIZE / 2 });
-    dots.push({ px: 9 * TILE_SIZE + TILE_SIZE / 2, py: 1 * TILE_SIZE + TILE_SIZE / 2 });
-    dots.push({ px: 1 * TILE_SIZE + TILE_SIZE / 2, py: 11 * TILE_SIZE + TILE_SIZE / 2 });
-    dots.push({ px: 9 * TILE_SIZE + TILE_SIZE / 2, py: 11 * TILE_SIZE + TILE_SIZE / 2 });
+    dots.push({ px: 15 * TILE_SIZE + TILE_SIZE / 2, py: 1 * TILE_SIZE + TILE_SIZE / 2 });
+    dots.push({ px: 1 * TILE_SIZE + TILE_SIZE / 2, py: 19 * TILE_SIZE + TILE_SIZE / 2 });
+    dots.push({ px: 15 * TILE_SIZE + TILE_SIZE / 2, py: 18 * TILE_SIZE + TILE_SIZE / 2 });
 
-    player.px = 5 * TILE_SIZE + TILE_SIZE / 2;
-    player.py = 9 * TILE_SIZE + TILE_SIZE / 2;
+    // プレイヤーの初期位置を中央付近 (8, 16) に調整
+    player.px = 8 * TILE_SIZE + TILE_SIZE / 2;
+    player.py = 16 * TILE_SIZE + TILE_SIZE / 2;
+    player.gx = 8;
+    player.gy = 16;
     player.pathQueue = [];
     player.dir = '';
 
+    // 敵の初期位置も中央付近に調整
     for (let g of ghosts) {
-        g.px = 5 * TILE_SIZE + TILE_SIZE / 2;
-        g.py = 5 * TILE_SIZE + TILE_SIZE / 2;
+        g.px = 8 * TILE_SIZE + TILE_SIZE / 2;
+        g.py = 3 * TILE_SIZE + TILE_SIZE / 2;
+        g.gx = 8;
+        g.gy = 6;
         g.dir = '';
     }
 }
 
 function draw() {
     background(0);
-    
+
     push();
     translate(offsetX, offsetY);
     scale(gameScale);
@@ -122,7 +137,7 @@ function draw() {
         text("GAME CLEAR!", (COLS * TILE_SIZE) / 2, (ROWS * TILE_SIZE) / 2);
         noLoop();
     }
-    
+
     pop();
 }
 
@@ -274,7 +289,7 @@ class Entity {
         // 現在のピクセル位置からスタート
         let lastPx = this.px;
         let lastPy = this.py;
-        
+
         let curGx = this.gx;
         let curGy = this.gy;
 
