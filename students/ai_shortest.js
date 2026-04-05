@@ -1,4 +1,4 @@
-GhostRegistry["梅本"] = {
+GhostRegistry["最短経路"] = {
     color: "red",
     count: 2,
     logic: function (myNodeX, myNodeY, playerNodeX, playerNodeY, availableDirs) {
