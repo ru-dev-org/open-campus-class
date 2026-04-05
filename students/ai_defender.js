@@ -1,6 +1,6 @@
 GhostRegistry["守護者"] = {
     color: "orange",
-    count: 3, // 例として3体出す設定を追加
+    count: 2,
     logic: function (myX, myY, pX, pY, dirs) {
         // 1. 守るべき場所（一番最初に決めた餌の位置）を固定する
         if (this.targetX === undefined) {

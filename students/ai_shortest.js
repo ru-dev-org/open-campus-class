@@ -1,5 +1,6 @@
 GhostRegistry["梅本"] = {
     color: "red",
+    count: 2,
     logic: function (myNodeX, myNodeY, playerNodeX, playerNodeY, availableDirs) {
         // sketch.js に定義されている最短経路探索関数を利用
         // 第1引数、第2引数が開始点（自分）、第3引数、第4引数が目標（プレイヤー）
