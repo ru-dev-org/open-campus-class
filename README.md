@@ -1,9 +1,9 @@
 # open-campus-class
 
 ## p5.js Web Editor
-- 下記のサイトにログイン
+- 以下のサイトにアクセスし、ログインできていなければ、Googleでログインを選択しログイン
   - https://editor.p5js.org/
-- 下記のURLにアクセス
+- ログインができていれば下記のURLにアクセス
   - https://editor.p5js.org/umemoto.biz.g/sketches/jNctC8QqD
 
 ## 生成したコードの格納先
