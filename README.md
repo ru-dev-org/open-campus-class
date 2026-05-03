@@ -8,7 +8,7 @@
 
 ## 生成したコードの格納先
 - ブラウザから以下のドライブにアクセスし、開いておく
- - [ドライブ](https://drive.google.com/drive/u/0/folders/1v0QMQ6xcCGs5YB-D91D3gYvtYT_l8lkw)
+ - [ドライブ](https://drive.google.com/drive/folders/1v0QMQ6xcCGs5YB-D91D3gYvtYT_l8lkw?usp=sharing)
 - Antigravity上で、作成したファイルを右クリック
 - "Reveal in File Explorer" を選択
 - 表示されたフォルダから作成したファイルをブラウザのドライブにドラッグ＆ドロップ
